@@ -1,0 +1,10 @@
+#!ipxe
+dhcp
+set base-url http://192.168.255.101/
+kernel ${base-url}hashios-vmlinuz \
+boot=ramdisk \
+ramroot=http://192.168.255.101/hashios-root.tar.xz \
+BOOTIF=01-${netX/mac:hexhyp}
+initrd ${base-url}hashios-initrd.img
+boot
+

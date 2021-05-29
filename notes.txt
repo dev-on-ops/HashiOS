@@ -1,0 +1,20 @@
+hashiserver:
+
+sudo -i
+apt update -y
+apt install dnsmasq apache2
+systemctl enable dnsmasq
+systemctl enable apache2
+mkdir /files
+chmod -R 777 /files
+cp /vagrant/boot_files/* /files
+cp /vagrant/pxeserver/apache /etc/apache2/sites-available/000-default.conf
+cp /vagrant/pxeserver/dnsmasq /etc/dnsmasq.conf
+cp /vagrant/pxeserver/undionly.kpxe /files/undionly.kpxe
+cp /vagrant/pxeserver/pxemenu.ipxe /files/pxemenu.ipxe
+
+chmod -R 777 /files
+systemctl stop apache2
+systemctl start apache2
+systemctl stop dnsmasq
+systemctl start dnsmasq

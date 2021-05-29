@@ -1,0 +1,11 @@
+listen-address=192.168.255.101
+dhcp-range=192.168.255.102,192.168.255.103,255.255.255.0,1m
+dhcp-option=option:router,192.168.255.1
+dhcp-option=option:dns-server,192.168.255.1
+dhcp-option=28,192.168.255.255
+enable-tftp
+tftp-root=/files
+dhcp-match=set:ipxe,175
+dhcp-vendorclass=BIOS,PXEClient:Arch:00000
+dhcp-boot=tag:!ipxe,tag:BIOS,undionly.kpxe,192.168.255.101,192.168.255.101
+dhcp-boot=tag:ipxe,pxemenu.ipxe,192.168.255.101,192.168.255.101
