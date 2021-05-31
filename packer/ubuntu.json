@@ -28,7 +28,8 @@
         "ssh_timeout": "50m",
         "ssh_username": "ubuntu",
         "type": "virtualbox-iso",
-        "guest_os_type": "Ubuntu_64"
+        "guest_os_type": "Ubuntu_64",
+        "skip_export": true
       }
     ],
     "provisioners": [
@@ -63,33 +64,33 @@
           "sudo touch /etc/fstab",
           "sudo update-initramfs -v -u",
           "sudo mkdir /tmp/export",
-          "sudo cp /boot/vmlinuz-* /tmp/export/",
-          "sudo cp /boot/initrd.img-* /tmp/export/",
+          "sudo cp /boot/vmlinuz-* /tmp/export/hashios-vmlinuz",
+          "sudo cp /boot/initrd.img-* /tmp/export/hashios-initrd.img",
           "sudo chmod -R 777 /tmp/export"
         ]
       },
       {
         "type": "file",
-        "source": "/tmp/export/vmlinuz-*",
+        "source": "/tmp/export/hashios-vmlinu*",
         "destination": "output",
         "direction": "download"
       },
       {
         "type": "file",
-        "source": "/tmp/export/initrd.img-*",
+        "source": "/tmp/export/hashios-initrd.*",
         "destination": "output",
         "direction": "download"
       },
       {
         "type": "shell",
         "inline": [
-          "sudo tar -I 'pixz -9' -cf /tmp/export/tmp.tar.xz -C / `ls / | grep -vE 'boot|cdrom|media|mnt|tmp|proc|run|sys'` || exit 0",
+          "sudo tar -I 'pixz -9' -cf /tmp/export/hashios-root.tar.xz -C / `ls / | grep -vE 'boot|cdrom|media|mnt|tmp|proc|run|sys'` || exit 0",
           "sudo chmod -R 777 /tmp/export"
         ]
       },
       {
         "type": "file",
-        "source": "/tmp/export/tmp.tar.*",
+        "source": "/tmp/export/hashios-root.tar.*",
         "destination": "output",
         "direction": "download"
       }
