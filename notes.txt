@@ -2,7 +2,7 @@ hashiserver:
 
 sudo -i
 apt update -y
-apt install dnsmasq apache2
+apt install -y dnsmasq apache2
 systemctl enable dnsmasq
 systemctl enable apache2
 mkdir /files

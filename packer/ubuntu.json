@@ -17,8 +17,8 @@
           "iso/ubuntu-20.04.2-live-server-amd64.iso",
           "https://releases.ubuntu.com/20.04/ubuntu-20.04.2-live-server-amd64.iso"
         ],
-        "cpus": 2,
-        "memory": 4096,
+        "cpus": 10,
+        "memory": 16384,
         "name": "ubuntu-20.04-live-server",
         "output_directory": "output/hashios",
         "shutdown_command": "sudo shutdown -P now",
@@ -35,15 +35,64 @@
       {
         "type": "shell",
         "inline": [
-          "ls /",
+          "sudo apt-get update",
+          "sudo apt-get -y dist-upgrade",
+          "sudo apt-get -y install initramfs-tools pixz busybox-static"
+        ]
+      },
+      {
+        "type": "shell",
+        "inline": [
           "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
           "sudo apt-add-repository 'deb [arch=amd64] https://apt.releases.hashicorp.com focal main'",
-          "sudo apt-get update && sudo apt-get install consul vault nomad",
-          "apt install genisoimage unzip zip squashfs-tools",
-          "",
-          "wget https://github.com/Tomas-M/linux-live/archive/refs/heads/master.zip",
-          "unzip master.zip -d /tmp/live-linux"
+          "sudo apt-get update && sudo apt-get install consul vault nomad"
         ]
+      },
+      {
+        "type": "file",
+        "source": "initramfs-tools",
+        "destination": "/tmp"
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "sudo cp -r /tmp/initramfs-tools/* /etc/initramfs-tools",
+          "sudo apt-get clean all",
+          "sudo cp -r -v /bin/busybox /usr/lib/initramfs-tools/bin/busybox",
+          "sudo rm /etc/fstab",
+          "sudo touch /etc/fstab",
+          "sudo update-initramfs -v -u",
+          "sudo mkdir /tmp/export",
+          "sudo cp /boot/vmlinuz-* /tmp/export/",
+          "sudo cp /boot/initrd.img-* /tmp/export/",
+          "sudo chmod -R 777 /tmp/export"
+        ]
+      },
+      {
+        "type": "file",
+        "source": "/tmp/export/vmlinuz-*",
+        "destination": "output",
+        "direction": "download"
+      },
+      {
+        "type": "file",
+        "source": "/tmp/export/initrd.img-*",
+        "destination": "output",
+        "direction": "download"
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "sudo tar -I 'pixz -9' -cf /tmp/export/tmp.tar.xz -C / `ls / | grep -vE 'boot|cdrom|media|mnt|tmp|proc|run|sys'` || exit 0",
+          "sudo chmod -R 777 /tmp/export"
+        ]
+      },
+      {
+        "type": "file",
+        "source": "/tmp/export/tmp.tar.*",
+        "destination": "output",
+        "direction": "download"
       }
     ]
+
   }

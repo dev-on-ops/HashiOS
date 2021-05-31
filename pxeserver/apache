@@ -1,6 +1,6 @@
 <VirtualHost *:80>
   ServerAdmin webmaster@localhost
-  DocumentRoot "/files”
+  DocumentRoot /files
   <Directory />
     Options FollowSymLinks
     AllowOverride None
