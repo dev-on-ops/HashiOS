@@ -18,10 +18,6 @@ initrd ${base-url}hashios-initrd.img
 boot
 ```
 
-reference:
-https://github.com/mvallim/live-custom-ubuntu-from-scratch
-https://itnext.io/how-to-create-a-custom-ubuntu-live-from-scratch-dd3b3f213f81
-
 Deployment architecture:
 # base location management plane, manages location control planes
 1 x git server (virtual) | stores git repos with configurations
